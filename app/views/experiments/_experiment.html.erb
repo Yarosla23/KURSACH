@@ -1,0 +1,44 @@
+<div id="<%= dom_id experiment %>" class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+      Симуляция #<%= experiment.id %>
+    </h3>
+    <div class="flex items-center gap-1.5">
+      <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Завершено</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3">
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+      <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">P Single</span>
+      <span class="text-lg font-mono font-bold text-indigo-600"><%= number_with_precision(experiment.p_single, precision: 4) %></span>
+    </div>
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+      <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">P AI</span>
+      <span class="text-lg font-mono font-bold text-indigo-600"><%= number_with_precision(experiment.p_ai, precision: 4) %></span>
+    </div>
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+      <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Узлы (N)</span>
+      <span class="text-lg font-mono font-bold text-slate-700"><%= experiment.n %></span>
+    </div>
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+      <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Тестировщики (K)</span>
+      <span class="text-lg font-mono font-bold text-slate-700"><%= experiment.k %></span>
+    </div>
+  </div>
+
+  <% if experiment.attack %>
+    <div class="bg-indigo-50/50 rounded-xl p-3 border border-indigo-100/50 flex items-center gap-3">
+      <div class="p-2 bg-white rounded-lg shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-indigo-600">
+          <path fill-rule="evenodd" d="M10 1a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 1ZM5.05 3.05a.75.75 0 0 1 1.06 0l1.062 1.06a.75.75 0 1 1-1.061 1.062L5.05 4.11a.75.75 0 0 1 0-1.06Zm9.899 0a.75.75 0 0 1 0 1.06l-1.06 1.062a.75.75 0 1 1-1.062-1.061l1.061-1.06a.75.75 0 0 1 1.06 0ZM12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM3.75 10a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5h-1.5Zm11 0a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5h-1.5ZM10 14.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75ZM5.05 15.89a.75.75 0 0 1 1.06 1.06l-1.06 1.062a.75.75 0 1 1-1.062-1.061l1.061-1.06a.75.75 0 0 1 1.06 0Zm9.899 0a.75.75 0 0 1 0 1.06l1.06 1.062a.75.75 0 1 1-1.061 1.061l-1.06-1.06a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div>
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-indigo-400">Тип атаки</span>
+        <span class="text-xs font-bold text-indigo-700"><%= experiment.attack.attack_type == "linear" ? "Линейная" : "Экспоненциальная" %></span>
+      </div>
+    </div>
+  <% end %>
+</div>

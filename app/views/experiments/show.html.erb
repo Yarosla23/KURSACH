@@ -1,0 +1,299 @@
+<div class="max-w-5xl mx-auto">
+  <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <%= link_to experiments_path, class: "inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-4 group" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+        </svg>
+        Назад к экспериментам
+      <% end %>
+      
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Анализ эксперимента</h1>
+      <p class="text-slate-500 mt-1">Детальный разбор результатов симуляции #<%= @experiment.id %>.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to edit_experiment_path(@experiment), class: "bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-semibold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-slate-400">
+          <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
+          <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
+        </svg>
+        Изменить параметры
+      <% end %>
+      
+      <%= button_to @experiment, method: :delete, data: { turbo_confirm: "Вы уверены, что хотите удалить этот эксперимент и все связанные данные?" }, class: "bg-rose-50 text-rose-600 border border-rose-100 px-5 py-2.5 rounded-xl font-semibold hover:bg-rose-100 transition-all flex items-center gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+          <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75V4H5a2 2 0 0 0-2 2v.5a.75.75 0 0 0 .75.75h.34l.808 10.103A3 3 0 0 0 5.89 20h8.22a3 3 0 0 0 2.992-2.647l.808-10.103h.34a.75.75 0 0 0 .75-.75V6a2 2 0 0 0-2-2h-1V3.75A2.75 2.75 0 0 0 13.25 1h-4.5ZM7.5 3.75a1.25 1.25 0 0 1 1.25-1.25h4.5a1.25 1.25 0 0 1 1.25 1.25V4h-7V3.75Zm.75 7a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75ZM11.75 11.5a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 1.5 0v-5Z" clip-rule="evenodd" />
+        </svg>
+        Удалить
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+        <div class="bg-indigo-600 px-8 py-6 text-white">
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 17.75 3.75H6.25A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+            </svg>
+            Метрики производительности
+          </h2>
+        </div>
+        <div class="p-8">
+          <div class="grid grid-cols-2 gap-8">
+            <div>
+              <span class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Значение P Single</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-4xl font-mono font-black text-indigo-600"><%= number_with_precision(@experiment.p_single, precision: 6) %></span>
+              </div>
+            </div>
+            <div>
+              <span class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Значение P AI</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-4xl font-mono font-black text-indigo-600"><%= number_with_precision(@experiment.p_ai, precision: 6) %></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-12 pt-8 border-t border-slate-100 grid grid-cols-3 gap-4">
+            <div class="text-center">
+              <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Масштаб (N)</span>
+              <span class="text-xl font-bold text-slate-800"><%= @experiment.n %></span>
+            </div>
+            <div class="text-center">
+              <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Тестировщики (K)</span>
+              <span class="text-xl font-bold text-slate-800"><%= @experiment.k %></span>
+            </div>
+            <div class="text-center">
+              <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Связность</span>
+              <span class="text-xl font-bold text-slate-800"><%= number_with_precision(@experiment.k.to_f / @experiment.n, precision: 2) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if @experiment.adjacency_matrix %>
+        <% matrix_data = @experiment.adjacency_matrix.data["matrix"] || [] %>
+        <% edge_count = matrix_data.sum { |row| row.count(1) } %>
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+          <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+            </svg>
+            Матрица смежности
+          </h3>
+          <div class="bg-slate-900 rounded-2xl p-6 overflow-x-auto">
+            <p class="text-slate-400 text-sm font-mono italic">Структура графа сформирована с использованием <%= edge_count %> активных соединений.</p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Примененная конфигурация</h3>
+        <% if @experiment.attack %>
+          <div class="group block p-4 rounded-2xl bg-indigo-50 border border-indigo-100 hover:border-indigo-300 transition-all">
+            <span class="block text-[10px] font-bold text-indigo-400 uppercase mb-1">Профиль атаки</span>
+            <span class="block font-bold text-indigo-900 text-lg mb-2"><%= @experiment.attack.attack_type == "linear" ? "Линейная" : "Экспоненциальная" %></span>
+            <div class="flex items-center gap-4 text-xs font-mono text-indigo-700">
+              <span>A: <%= @experiment.attack.a %></span>
+              <span>B: <%= @experiment.attack.b %></span>
+            </div>
+            <%= link_to "Детали атаки", @experiment.attack, class: "mt-4 inline-flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-800" %>
+          </div>
+        <% else %>
+          <div class="p-4 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-center">
+            <p class="text-sm text-slate-400">Профиль атаки не привязан</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-6">
+        <h3 class="text-sm font-bold text-emerald-700 uppercase tracking-widest mb-4">Проверка целостности</h3>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-emerald-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd" d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div>
+            <span class="block font-bold text-emerald-900">Валидная симуляция</span>
+            <span class="block text-xs text-emerald-600">Все ограничения соблюдены</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<h1>Результаты эксперимента</h1>
+
+<%
+  chart_points = ->(field) do
+    @results
+      .map { |r| [r.t.to_i, r.public_send(field)] }
+      .select { |t, v| t.positive? && v.present? && (!v.respond_to?(:finite?) || v.finite?) }
+      .map { |t, v| [t, v.to_f] }
+  end
+
+  p_attack_points = chart_points.call(:p_attack)
+  p_fail_points = @results.map { |r| [r.t.to_i, (@experiment.p_ai * r.p_attack.to_f)] }
+  p_single_counter_points = chart_points.call(:p_single_counter)
+  p_collab_counter_points = chart_points.call(:p_collab_counter)
+
+  base_chart_opts = {
+    xtitle: "Время t (шаг моделирования)",
+    ytitle: "Вероятность",
+    points: false,
+    height: "460px",
+    width: "72%"
+  }
+%>
+
+<% if p_single_counter_points.any? || p_collab_counter_points.any? %>
+  <h2>Базовая вероятность P(p(t)) без противодействия</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    График рассчитывается по формуле (1):
+    `P(p(t)) = p(t) * (1-p(t))^(k-1)`.
+    Здесь по оси `X` отложено значение `k`, а `p(t)=<%= number_with_precision(@experiment.p_single, precision: 4) %>` фиксировано.
+  </p>
+  <%= chart_canvas @single_base_by_k, **base_chart_opts.merge(title: "Базовая вероятность одиночного тестирования", xtitle: "Число тестов k") %>
+
+  <h2>Базовая вероятность P(p(t,k)) без противодействия</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    График рассчитывается по формуле (2):
+    `P(p(t,k)) = C(n,k) * p(t)^k * (1-p(t))^(n-k)`.
+    По оси `X` отложено значение `k`, а каждая линия соответствует своему `n` из диапазона `1..8`.
+    Это позволяет увидеть влияние мощности коллаборации без учета противодействия.
+  </p>
+  <%= chart_canvas @collab_base_by_n, **base_chart_opts.merge(title: "Базовая вероятность коллаборационного тестирования", xtitle: "Число тестировщиков k") %>
+
+  <h2>Вероятность противодействия pA(t)</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    График строится по формуле профиля выбранной атаки:
+    для линейной `pA(t)=a*t+b`, для экспоненциальной `pA(t)=1-a*exp(-b*t)`.
+    Это базовая вероятность действий злоумышленника по противодействию тестированию.
+  </p>
+  <%= chart_canvas p_attack_points, **base_chart_opts.merge(title: "Профиль атаки pA(t)") %>
+
+  <h2>Вероятность полного отказа p(ai)*pA(t)</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    Для текущего эксперимента используется частный случай формулы (7):
+    `pA(отк)=p(ai)*p(отк|Ai)`.
+    В приложении `p(отк|Ai)` моделируется выбранной атакой, поэтому на графике показано `p(ai)*pA(t)`.
+  </p>
+  <%= chart_canvas p_fail_points, **base_chart_opts.merge(title: "Отказ тестирования p(ai) * pA(t)") %>
+
+  <h2>P(pA(t),p(t)) для выбранного эксперимента</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    График рассчитывается по формуле (8):
+    `P(pA(t),p(t)) = (1-pA(отк)) * p(t) * (1-p(t))^(k-1)`,
+    где `pA(отк)=p(ai)*pA(t)`.
+    Здесь используется именно введенное значение `p(t)=<%= number_with_precision(@experiment.p_single, precision: 4) %>` и текущее `k=<%= @experiment.k %>`.
+  </p>
+  <%= chart_canvas p_single_counter_points, **base_chart_opts.merge(title: "Одиночное тестирование с учетом противодействия") %>
+
+  <h2>P(pA(t),p(t,k)) для выбранного эксперимента</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    График рассчитывается по формуле (9):
+    `P(pA(t),p(t,k)) = (1-pA(отк)) * C(n,k) * p(t)^k * (1-p(t))^(n-k)`,
+    где `pA(отк)=p(ai)*pA(t)`.
+    Здесь используются параметры `p(t)=<%= number_with_precision(@experiment.p_single, precision: 4) %>`, `n=<%= @experiment.n %>`, `k=<%= @experiment.k %>`.
+  </p>
+  <%= chart_canvas p_collab_counter_points, **base_chart_opts.merge(title: "Коллаборационная стратегия с учетом противодействия") %>
+
+  <h2>С учётом противодействия</h2>
+  <p class="text-sm text-slate-600 mb-2">
+    На одном графике показано сравнение двух итоговых зависимостей:
+    одиночное тестирование по формуле (8) и коллаборационная стратегия по формуле (9).
+    Это основной график для сравнения эффективности двух режимов именно в рамках текущего эксперимента.
+  </p>
+  <% result_series = [
+    {name: "Single", data: p_single_counter_points},
+    {name: "Collab", data: p_collab_counter_points}
+  ] %>
+  <%= chart_canvas result_series, **base_chart_opts.merge(title: "Обнаружение с учетом противодействия") %>
+<% else %>
+  <p class="text-slate-500">Для этого эксперимента пока нет корректных данных для построения графиков.</p>
+<% end %>
+
+<h2 class="text-2xl font-bold mt-8 mb-4 text-center">
+  P(p(t,k)) по диапазонам n=[1..8], k=[1..5] для текущего p(t)
+</h2>
+<p class="text-sm text-slate-600 mb-4 text-center">
+  Таблица рассчитывается по формуле (2): для каждого сочетания `n` и `k` вычисляется биномиальная вероятность обнаружения
+  при фиксированном `p(t)=<%= number_with_precision(@experiment.p_single, precision: 4) %>`.
+  Значения не зависят от времени, поэтому здесь используется табличное представление, а не временной график.
+</p>
+<div class="overflow-x-auto">
+  <table class="table-auto border border-gray-300 mx-auto text-center text-sm">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="border border-gray-300 px-3 py-2">n \\ k</th>
+        <% (1..5).each do |k| %>
+          <th class="border border-gray-300 px-3 py-2"><%= k %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @collab_grid.each do |row| %>
+        <tr>
+          <td class="border border-gray-300 px-3 py-2 font-semibold"><%= row[:n] %></td>
+          <% (1..5).each do |k| %>
+            <td class="border border-gray-300 px-3 py-2">
+              <%= row[:values][k].nil? ? "—" : number_with_precision(row[:values][k], precision: 4) %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<% if @experiment.adjacency_matrix %>
+  <h2 class="text-2xl font-bold mb-4 text-center">Матрица смежности</h2>
+  <p class="text-sm text-slate-600 mb-4 text-center">
+    Матрица генерируется размером `15x15`, при этом для каждой строки число связей выбирается из диапазона `[1;6]`.
+    После генерации применяется жадный алгоритм, который пошагово выбирает строки, покрывающие максимум еще не покрытых столбцов.
+  </p>
+
+  <% matrix = @experiment.adjacency_matrix.data["matrix"] %>
+  <% cover = @experiment.adjacency_matrix.data["cover"] %>
+
+  <div class="overflow-x-auto">
+    <table class="table-auto border border-gray-300 mx-auto text-center text-sm">
+      <thead>
+        <tr>
+          <th class="border border-gray-300 px-2 py-1 w-8"></th>
+          <% matrix.size.times do |j| %>
+            <th class="border border-gray-300 px-2 py-1 w-8 font-bold bg-gray-100"><%= j %></th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% matrix.each_with_index do |row, i| %>
+          <tr class="<%= cover.include?(i) ? 'bg-blue-200 font-bold' : '' %>">
+            <th class="border border-gray-300 px-2 py-1 font-bold"><%= i %></th>
+            <% row.each do |cell| %>
+              <% cell_class = cell == 1 ? 'bg-green-200 font-bold' : 'bg-red-200' %>
+              <td class="border border-gray-300 px-2 py-1 <%= cell_class %>"><%= cell %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-6">Минимальное покрытие (жадный алгоритм)</h3>
+  <p class="mt-2 text-gray-800">
+    Выбранные строки:
+    <strong class="text-gray-900"><%= cover.join(", ") %></strong>
+  </p>
+<% end %>

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  adjacency_matrix: one
+  x: 1
+  'y': 1
+  weight: 1
+
+two:
+  adjacency_matrix: two
+  x: 1
+  'y': 1
+  weight: 1

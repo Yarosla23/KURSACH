@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  experiment: one
+  t: 1
+  p_attack: 1.5
+  p_single: 1.5
+  p_collab: 1.5
+  p_single_counter: 1.5
+  p_collab_counter: 1.5
+
+two:
+  experiment: two
+  t: 1
+  p_attack: 1.5
+  p_single: 1.5
+  p_collab: 1.5
+  p_single_counter: 1.5
+  p_collab_counter: 1.5

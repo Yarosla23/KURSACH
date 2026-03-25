@@ -1,0 +1,218 @@
+<div class="max-w-4xl mx-auto">
+  <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <%= link_to attacks_path, class: "inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-4 group" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+        </svg>
+       Назад ко всему списку атак
+      <% end %>
+      
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Атака</h1>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to edit_attack_path(@attack), class: "bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-semibold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-slate-400">
+          <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
+          <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
+        </svg>
+        Редактировать
+      <% end %>
+      
+      <%= button_to @attack, method: :delete, data: { turbo_confirm: "Are you sure you want to delete this configuration?" }, class: "bg-rose-50 text-rose-600 border border-rose-100 px-5 py-2.5 rounded-xl font-semibold hover:bg-rose-100 transition-all flex items-center gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+          <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75V4H5a2 2 0 0 0-2 2v.5a.75.75 0 0 0 .75.75h.34l.808 10.103A3 3 0 0 0 5.89 20h8.22a3 3 0 0 0 2.992-2.647l.808-10.103h.34a.75.75 0 0 0 .75-.75V6a2 2 0 0 0-2-2h-1V3.75A2.75 2.75 0 0 0 13.25 1h-4.5ZM7.5 3.75a1.25 1.25 0 0 1 1.25-1.25h4.5a1.25 1.25 0 0 1 1.25 1.25V4h-7V3.75Zm.75 7a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75ZM11.75 11.5a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 1.5 0v-5Z" clip-rule="evenodd" />
+        </svg>
+        Удалить
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+    <div class="bg-indigo-600 px-8 py-6 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-indigo-100 text-xs font-bold uppercase tracking-widest">Тип конфигурации</span>
+          <h2 class="text-2xl font-bold mt-1">
+            <%= @attack.attack_type == "linear" ? "Линейная" : "Экспоненциальная" %>
+          </h2>
+        </div>
+        <div class="bg-indigo-500/30 p-3 rounded-2xl backdrop-blur-sm border border-indigo-400/30">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="space-y-6">
+          <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Установленные параметры</h3>
+          
+          <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="font-semibold text-slate-600">Параметр A</span>
+            <span class="font-mono text-xl font-bold text-slate-900"><%= @attack.a %></span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="font-semibold text-slate-600">Параметр B</span>
+            <span class="font-mono text-xl font-bold text-slate-900"><%= @attack.b %></span>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100 flex flex-col justify-center">
+          <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Формула профиля</h3>
+          <div class="bg-white rounded-2xl border border-slate-200 p-5">
+            <p class="font-mono text-lg text-slate-900">
+              <%= @attack.attack_type == "linear" ? "pA(t) = a * t + b" : "pA(t) = 1 - a * exp(-b * t)" %>
+            </p>
+            <p class="mt-3 text-sm text-slate-500">
+              Эта страница показывает только динамику атаки и справочные методические графики, без параметров эксперимента `p(t)`, `p(ai)`, `n`, `k`.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%
+    base_chart_opts = {
+      xtitle: "Время t",
+      ytitle: "Вероятность",
+      points: false,
+      height: "420px"
+    }
+  %>
+
+  <div class="mt-8 space-y-8">
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">Динамика выбранной атаки</h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        График рассчитывается по выбранной формуле профиля:
+        для линейной атаки `pA(t)=a*t+b`, для экспоненциальной `pA(t)=1-a*exp(-b*t)`.
+        Здесь показывается именно вероятность противодействия тестированию, без учета `p(t)`, `p(ai)`, `n`, `k`.
+      </p>
+      <%= chart_canvas @failure_series, **base_chart_opts.merge(title: "Выбранная атака pA(t)") %>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">Эталонные профили отказа</h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        Справочные кривые Лин_Н/С/В и Exp_Н/С/В из методических указаний при `p(ai)=1.0`.
+        Значение на каждом шаге вычисляется напрямую по параметрам `a` и `b` соответствующего профиля.
+        Этот график нужен для визуального сравнения интенсивностей атак и проверки соответствия таблице 1.
+      </p>
+      <%= chart_canvas @reference_failure_series, **base_chart_opts.merge(title: "Классификация ситуаций обнаружения отказов") %>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">Сравнение типов атак при p(ai)=0.33</h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        Средневзвешенная динамика отказов для линейных и экспоненциальных атак.
+        Для каждого типа берутся три интенсивности, после чего строится среднее с весом `1/3`.
+        Это соответствует сценарию методички, где для каждого типа атаки рассматриваются три интенсивности и вероятность появления каждой равна `0.33`.
+      </p>
+      <% weighted_series = [
+        { name: "Линейные", data: @weighted_failure_by_type[:linear] },
+        { name: "Экспоненциальные", data: @weighted_failure_by_type[:exponential] }
+      ] %>
+      <%= chart_canvas weighted_series, **base_chart_opts.merge(title: "Агрегированные профили по типам атак") %>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">Индивидуальные варианты по методичке</h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        По разделу 3 методических указаний для студента с номером `I=1` используются варианты
+        `N=(I mod 11)+1=2`, `J=((I+3) mod 11)+1=5`, `K=((J+3) mod 11)+1=9`.
+        Для таблицы 2 при этом применяется вариант `2`, то есть режимы `p(t)>0.5 = 0.75` и `p(t)<0.5 = 0.47`.
+      </p>
+
+      <div class="overflow-x-auto mb-6">
+        <table class="table-auto border border-gray-300 mx-auto text-center text-sm">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-3 py-2">Вариант</th>
+              <th class="border border-gray-300 px-3 py-2">Экспоненциальная a</th>
+              <th class="border border-gray-300 px-3 py-2">Экспоненциальная b</th>
+              <th class="border border-gray-300 px-3 py-2">Линейная a</th>
+              <th class="border border-gray-300 px-3 py-2">Линейная b</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @assignment[:attack_variants].each do |variant_number| %>
+              <% variant = MethodologyReportService::ATTACK_VARIANTS.fetch(variant_number) %>
+              <tr>
+                <td class="border border-gray-300 px-3 py-2 font-semibold"><%= variant_number %></td>
+                <td class="border border-gray-300 px-3 py-2"><%= variant[:exponential][:a] %></td>
+                <td class="border border-gray-300 px-3 py-2"><%= variant[:exponential][:b] %></td>
+                <td class="border border-gray-300 px-3 py-2"><%= variant[:linear][:a] %></td>
+                <td class="border border-gray-300 px-3 py-2"><%= variant[:linear][:b] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900 mb-3">Линейные профили вариантов 2, 5, 9</h3>
+          <p class="text-sm text-slate-500 mb-4">
+            Графики строятся по формуле `pA(t)=a*t+b` для вариантов из таблицы 1 методички.
+            Этот блок помогает прямо сверить реализованную систему с индивидуальным заданием, а не только с общей справочной таблицей.
+          </p>
+          <%= chart_canvas @variant_linear_series, **base_chart_opts.merge(title: "Линейные варианты 2, 5, 9") %>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-slate-900 mb-3">Экспоненциальные профили вариантов 2, 5, 9</h3>
+          <p class="text-sm text-slate-500 mb-4">
+            Графики строятся по формуле `pA(t)=1-a*exp(-b*t)` для тех же вариантов.
+            Они нужны для подготовки экспериментальных сценариев по пункту 4 постановки задачи из методички.
+          </p>
+          <%= chart_canvas @variant_exponential_series, **base_chart_opts.merge(title: "Экспоненциальные варианты 2, 5, 9") %>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4">Таблица 1. Классификация ситуаций обнаружения отказов</h2>
+      <p class="text-sm text-slate-500 mb-4">
+        Таблица отражает значения `pA(t)` по профилям Лин_Н/С/В и Exp_Н/С/В.
+        Цветовая маркировка строится по интервалам из методички:
+        низкий уровень при `0 <= pA(t) < 0.4`,
+        средний при `0.4 <= pA(t) < 0.7`,
+        высокий при `0.7 <= pA(t) <= 1`.
+      </p>
+      <div class="overflow-x-auto">
+        <table class="table-auto border border-gray-300 mx-auto text-center text-sm">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-3 py-2">t</th>
+              <th class="border border-gray-300 px-3 py-2">Лин_Н</th>
+              <th class="border border-gray-300 px-3 py-2">Лин_С</th>
+              <th class="border border-gray-300 px-3 py-2">Лин_В</th>
+              <th class="border border-gray-300 px-3 py-2">Exp_Н</th>
+              <th class="border border-gray-300 px-3 py-2">Exp_С</th>
+              <th class="border border-gray-300 px-3 py-2">Exp_В</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @classification_table.each do |row| %>
+              <tr>
+                <td class="border border-gray-300 px-3 py-2 font-semibold"><%= row[:t] %></td>
+                <td class="border border-gray-300 px-3 py-2 <%= row[:lin_n_meta][:color_class] %>"><%= number_with_precision(row[:lin_n], precision: 2) %></td>
+                <td class="border border-gray-300 px-3 py-2 <%= row[:lin_s_meta][:color_class] %>"><%= number_with_precision(row[:lin_s], precision: 2) %></td>
+                <td class="border border-gray-300 px-3 py-2 <%= row[:lin_v_meta][:color_class] %>"><%= number_with_precision(row[:lin_v], precision: 2) %></td>
+                <td class="border border-gray-300 px-3 py-2 <%= row[:exp_n_meta][:color_class] %>"><%= number_with_precision(row[:exp_n], precision: 2) %></td>
+                <td class="border border-gray-300 px-3 py-2 <%= row[:exp_s_meta][:color_class] %>"><%= number_with_precision(row[:exp_s], precision: 2) %></td>
+                <td class="border border-gray-300 px-3 py-2 <%= row[:exp_v_meta][:color_class] %>"><%= number_with_precision(row[:exp_v], precision: 2) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

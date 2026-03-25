@@ -1,0 +1,18 @@
+<div id="<%= dom_id attack %>" class="space-y-4 mt-2">
+  <div>
+    <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+      Конфигурация атаки
+    </h3>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+      <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Параметр A</span>
+      <span class="text-xl font-mono font-semibold text-slate-700"><%= attack.a %></span>
+    </div>
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+      <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Параметр B</span>
+      <span class="text-xl font-mono font-semibold text-slate-700"><%= attack.b %></span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  attacks_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  p_single: 0.8
+  p_ai: 1.0
+  n: 5
+  k: 3
+
+two:
+  attacks_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
+  p_single: 0.43
+  p_ai: 0.33
+  n: 8
+  k: 5

@@ -8,6 +8,8 @@ class ExperimentsController < ApplicationController
   def show
     @results = @experiment.experiment_results.order(:t)
     @collab_grid = MethodologyReportService.collab_grid_for(p_t: @experiment.p_single)
+    @comparison_analysis = ExperimentComparisonService.new(@experiment).call
+    @runtime_comparison_analysis = ExperimentRuntimeComparisonService.new(@experiment).call
     @single_base_by_k = (1..5).map do |k|
       [k, ProbabilityService.single_test(@experiment.p_single, k)]
     end

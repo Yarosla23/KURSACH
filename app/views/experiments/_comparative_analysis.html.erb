@@ -1,0 +1,101 @@
+<% comparison = comparison_analysis %>
+<% probabilities = comparison[:detection_probabilities] %>
+<% comparison_chart_opts = {
+  xtitle: "Время t (шаг моделирования)",
+  ytitle: "Вероятность",
+  points: false,
+  height: "420px"
+} %>
+
+<div class="mt-10 bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+  <h2 class="text-2xl font-bold text-slate-900">Сравнительный анализ по вариантным режимам методики</h2>
+  <p class="text-sm text-slate-500 mt-2">
+    Блок построен по варианту таблицы 2 для <span class="font-semibold">I=1</span>, где используются режимы
+    <span class="font-semibold">p(t)=<%= probabilities[:high] %></span> и
+    <span class="font-semibold">p(t)=<%= probabilities[:low] %></span>.
+    Для обоих режимов применяются текущие параметры эксперимента:
+    <span class="font-semibold">p(ai)=<%= number_with_precision(@experiment.p_ai, precision: 4) %></span>,
+    <span class="font-semibold">n=<%= @experiment.n %></span>,
+    <span class="font-semibold">k=<%= @experiment.k %></span>,
+    а также выбранный профиль атаки.
+  </p>
+
+  <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div>
+      <h3 class="text-lg font-bold text-slate-900 mb-3">Режим p(t)=<%= probabilities[:high] %></h3>
+      <p class="text-sm text-slate-500 mb-4">
+        На графике сопоставляются вероятность атаки <span class="font-mono">pA(t)</span> и вероятность обнаружения
+        <span class="font-mono">P(pA(t), p(t,k))</span> для режима <span class="font-mono">p(t)&gt;0.5</span>.
+      </p>
+      <%= chart_canvas comparison[:series][:high], **comparison_chart_opts.merge(title: "Сравнение стратегий при p(t)=#{probabilities[:high]}") %>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-bold text-slate-900 mb-3">Режим p(t)=<%= probabilities[:low] %></h3>
+      <p class="text-sm text-slate-500 mb-4">
+        Этот график показывает вероятность атаки и вероятность обнаружения
+        <span class="font-mono">P(pA(t), p(t,k))</span> для режима <span class="font-mono">p(t)&lt;0.5</span>.
+      </p>
+      <%= chart_canvas comparison[:series][:low], **comparison_chart_opts.merge(title: "Сравнение стратегий при p(t)=#{probabilities[:low]}") %>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold text-slate-900 mb-3">Сводная таблица сравнительного анализа</h3>
+    <p class="text-sm text-slate-500 mb-4">
+      Таблица построена по логике методического образца: в ней приводятся значения вероятности атаки
+      <span class="font-mono">pA(t)</span> и вероятности обнаружения
+      <span class="font-mono">P(pA(t), p(t,k))</span> для двух режимов базовой обнаруживаемости.
+    </p>
+    <div class="mb-4 flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600">
+      <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1">
+        <span class="h-3 w-3 rounded-full bg-emerald-200"></span>
+        низкий уровень вероятности атаки
+      </span>
+      <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1">
+        <span class="h-3 w-3 rounded-full bg-amber-200"></span>
+        средний уровень
+      </span>
+      <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1">
+        <span class="h-3 w-3 rounded-full bg-rose-200"></span>
+        высокий уровень вероятности атаки
+      </span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="table-auto border border-gray-300 mx-auto text-center text-sm min-w-full">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-3 py-2" rowspan="2">t</th>
+            <th class="border border-gray-300 px-3 py-2" rowspan="2">pA(t)</th>
+            <th class="border border-gray-300 px-3 py-2" colspan="2">P(pA(t), p(t,k))</th>
+          </tr>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-3 py-2">p(t) &gt; 0.5</th>
+            <th class="border border-gray-300 px-3 py-2">p(t) &lt; 0.5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% comparison[:rows].each do |row| %>
+            <tr>
+              <td class="border border-gray-300 px-3 py-2 font-semibold"><%= row[:t] %></td>
+              <td class="border border-gray-300 px-3 py-2 font-medium <%= probability_level_class(row[:p_attack], positive_high: false) %>"><%= number_with_precision(row[:p_attack] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2"><%= number_with_precision(row[:high_detect] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2"><%= number_with_precision(row[:low_detect] * 100, precision: 1) %>%</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold text-slate-900 mb-3">Автоматически сформированные выводы</h3>
+    <div class="space-y-3">
+      <% comparison[:insights].each do |insight| %>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-slate-700 leading-6">
+          <%= insight %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,30 @@ module ApplicationHelper
     "#65a30d"
   ].freeze
 
+  def probability_level_class(value, positive_high: true)
+    return "bg-slate-50 text-slate-500" if value.nil?
+
+    numeric_value = value.to_f
+
+    if positive_high
+      if numeric_value < 0.4
+        "bg-rose-100 text-rose-900"
+      elsif numeric_value < 0.7
+        "bg-amber-100 text-amber-900"
+      else
+        "bg-emerald-100 text-emerald-900"
+      end
+    else
+      if numeric_value < 0.4
+        "bg-emerald-100 text-emerald-900"
+      elsif numeric_value < 0.7
+        "bg-amber-100 text-amber-900"
+      else
+        "bg-rose-100 text-rose-900"
+      end
+    end
+  end
+
   def chart_canvas(series, **options)
     height = options[:height] || "420px"
     canvas_id = "chart-#{SecureRandom.hex(8)}"

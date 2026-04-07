@@ -1,0 +1,96 @@
+<% runtime = runtime_comparison_analysis %>
+<% runtime_chart_opts = {
+  xtitle: "Время t (шаг моделирования)",
+  ytitle: "Вероятность",
+  points: false,
+  height: "420px"
+} %>
+
+<div class="mt-10 bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+  <h2 class="text-2xl font-bold text-slate-900">Сравнительный анализ по текущим параметрам эксперимента</h2>
+  <p class="text-sm text-slate-500 mt-2">
+    Этот блок строится не по фиксированным вариантным режимам методики, а по тем значениям,
+    которые пользователь ввел в форму эксперимента:
+    <span class="font-semibold">p(t)=<%= number_with_precision(@experiment.p_single, precision: 4) %></span>,
+    <span class="font-semibold">p(ai)=<%= number_with_precision(@experiment.p_ai, precision: 4) %></span>,
+    <span class="font-semibold">n=<%= @experiment.n %></span>,
+    <span class="font-semibold">k=<%= @experiment.k %></span>.
+    Он показывает, как выбранные параметры влияют на режимы Single и Collab в рамках именно текущего эксперимента.
+  </p>
+
+  <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div>
+      <h3 class="text-lg font-bold text-slate-900 mb-3">Single: базовый и скорректированный режим</h3>
+      <p class="text-sm text-slate-500 mb-4">
+        Сопоставляются базовая вероятность одиночного обнаружения, та же вероятность с учетом противодействия
+        и вероятность отказа тестирования <span class="font-mono">pA(отк)</span>.
+      </p>
+      <%= chart_canvas runtime[:series][:single], **runtime_chart_opts.merge(title: "Single при текущих параметрах") %>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-bold text-slate-900 mb-3">Collab: базовый и скорректированный режим</h3>
+      <p class="text-sm text-slate-500 mb-4">
+        Этот график показывает, как противодействие изменяет вероятность коллаборационного обнаружения
+        при выбранных значениях <span class="font-mono">p(t)</span>, <span class="font-mono">n</span> и <span class="font-mono">k</span>.
+      </p>
+      <%= chart_canvas runtime[:series][:collab], **runtime_chart_opts.merge(title: "Collab при текущих параметрах") %>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold text-slate-900 mb-3">Single и Collab с учетом противодействия</h3>
+    <p class="text-sm text-slate-500 mb-4">
+      На графике напрямую сопоставляются две итоговые зависимости для текущего эксперимента.
+      Этот блок отвечает на вопрос, какая стратегия оказывается эффективнее при реально введенных параметрах.
+    </p>
+    <%= chart_canvas runtime[:series][:counter_compare], **runtime_chart_opts.merge(title: "Сравнение Single и Collab для текущего эксперимента") %>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold text-slate-900 mb-3">Сводная таблица по введенным параметрам</h3>
+    <div class="overflow-x-auto">
+      <table class="table-auto border border-gray-300 mx-auto text-center text-sm min-w-full">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-3 py-2" rowspan="2">t</th>
+            <th class="border border-gray-300 px-3 py-2" rowspan="2">pA(t)</th>
+            <th class="border border-gray-300 px-3 py-2" rowspan="2">pA(отк)</th>
+            <th class="border border-gray-300 px-3 py-2" colspan="2">Single</th>
+            <th class="border border-gray-300 px-3 py-2" colspan="2">Collab</th>
+          </tr>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-3 py-2">без противодействия</th>
+            <th class="border border-gray-300 px-3 py-2">с противодействием</th>
+            <th class="border border-gray-300 px-3 py-2">без противодействия</th>
+            <th class="border border-gray-300 px-3 py-2">с противодействием</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% runtime[:rows].each do |row| %>
+            <tr>
+              <td class="border border-gray-300 px-3 py-2 font-semibold"><%= row[:t] %></td>
+              <td class="border border-gray-300 px-3 py-2 font-medium <%= probability_level_class(row[:p_attack], positive_high: false) %>"><%= number_with_precision(row[:p_attack] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2 font-medium <%= probability_level_class(row[:p_fail], positive_high: false) %>"><%= number_with_precision(row[:p_fail] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2"><%= number_with_precision(row[:single_base] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2"><%= number_with_precision(row[:single_counter] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2"><%= number_with_precision(row[:collab_base] * 100, precision: 1) %>%</td>
+              <td class="border border-gray-300 px-3 py-2"><%= number_with_precision(row[:collab_counter] * 100, precision: 1) %>%</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h3 class="text-lg font-bold text-slate-900 mb-3">Выводы по введенным параметрам</h3>
+    <div class="space-y-3">
+      <% runtime[:insights].each do |insight| %>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-slate-700 leading-6">
+          <%= insight %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

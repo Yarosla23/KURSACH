@@ -222,6 +222,9 @@
   <p class="text-slate-500">Для этого эксперимента пока нет корректных данных для построения графиков.</p>
 <% end %>
 
+<%= render "comparative_analysis", comparison_analysis: @comparison_analysis %>
+<%= render "runtime_comparative_analysis", runtime_comparison_analysis: @runtime_comparison_analysis %>
+
 <h2 class="text-2xl font-bold mt-8 mb-4 text-center">
   P(p(t,k)) по диапазонам n=[1..8], k=[1..5] для текущего p(t)
 </h2>

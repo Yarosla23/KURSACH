@@ -3,6 +3,13 @@ class ExperimentsController < ApplicationController
 
   def index
     @experiments = Experiment.all.order(created_at: :desc)
+    @assignment = MethodologyReportService.general_list_assignment(1)
+    @detection_surface_high = MethodologyReportService.collab_probability_surface_config(
+      p_t: @assignment[:detection_probabilities][:high]
+    )
+    @detection_surface_low = MethodologyReportService.collab_probability_surface_config(
+      p_t: @assignment[:detection_probabilities][:low]
+    )
   end
 
   def show
@@ -23,6 +30,10 @@ class ExperimentsController < ApplicationController
         end
       }
     end.select { |series| series[:data].any? }
+    @experiment_surface = MethodologyReportService.experiment_surface_config(
+      experiment: @experiment,
+      results: @results
+    )
   end
 
   def new

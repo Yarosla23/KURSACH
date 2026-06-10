@@ -78,7 +78,56 @@ module ApplicationHelper
     end
   end
 
+  def surface_chart_canvas(config, height: "500px")
+    prepared = normalize_surface_chart_config(config)
+
+    content_tag(
+      :div,
+      class: "surface3d-shell relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-white",
+      style: "height: #{height};"
+    ) do
+      content_tag(
+        :canvas,
+        "",
+        class: "js-surface-chart block h-full w-full",
+        role: "img",
+        aria: { label: prepared[:title] || "3D-график" },
+        data: { config: prepared.to_json }
+      )
+    end
+  end
+
   private
+
+  def normalize_surface_chart_config(config)
+    source = config.respond_to?(:to_h) ? config.to_h : {}
+    values = Array(source[:values] || source["values"]).map { |row| normalize_surface_row(row) }
+    numeric_values = values.flatten.compact
+    range_min, range_max = adaptive_chart_range(numeric_values)
+
+    y_min_value = source[:yMin] || source["yMin"]
+    y_max_value = source[:yMax] || source["yMax"]
+
+    {
+      title: source[:title] || source["title"] || "3D-график",
+      xLabels: Array(source[:xLabels] || source["xLabels"]).map(&:to_s),
+      zLabels: Array(source[:zLabels] || source["zLabels"]).map(&:to_s),
+      xTitle: source[:xTitle] || source["xTitle"] || "x",
+      zTitle: source[:zTitle] || source["zTitle"] || "z",
+      yTitle: source[:yTitle] || source["yTitle"] || "y",
+      yMin: numeric_like?(y_min_value) ? y_min_value.to_f : range_min,
+      yMax: numeric_like?(y_max_value) ? y_max_value.to_f : range_max,
+      values: values
+    }
+  end
+
+  def normalize_surface_row(row)
+    Array(row).map do |value|
+      next nil if value.nil?
+
+      numeric_like?(value) ? value.to_f : nil
+    end
+  end
 
   def chart_js_config(series, **options)
     normalized_series = normalize_chart_series(series)

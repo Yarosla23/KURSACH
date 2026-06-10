@@ -177,6 +177,15 @@
     </div>
 
     <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">3D-поверхность выбранной атаки</h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        По оси X отложено время `t`, по глубине - вероятность появления атаки `p(ai)`, по высоте - значение `p(ai)*pA(t)`.
+        График показывает, как вероятность полного отказа меняется во времени при разных `p(ai)`.
+      </p>
+      <%= surface_chart_canvas @attack_surface, height: "500px" %>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
       <h2 class="text-2xl font-bold text-slate-900 mb-4">Таблица 1. Классификация ситуаций обнаружения отказов</h2>
       <p class="text-sm text-slate-500 mb-4">
         Таблица отражает значения `pA(t)` по профилям Лин_Н/С/В и Exp_Н/С/В.

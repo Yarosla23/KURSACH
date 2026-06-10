@@ -164,6 +164,88 @@ class MethodologyReportService
     end
   end
 
+  def self.variant_attack_surface_config(assignment_index: 1)
+    assignment = general_list_assignment(assignment_index)
+    z_labels = []
+    values = []
+
+    assignment[:attack_variants].each do |variant_number|
+      variant = ATTACK_VARIANTS.fetch(variant_number)
+      [:linear, :exponential].each do |attack_type|
+        params = variant.fetch(attack_type)
+        z_labels << "#{attack_type == :linear ? "L" : "E"}#{variant_number}"
+        values << TIME_RANGE.map do |t|
+          attack_type == :linear ? linear_probability(params, t) : exponential_probability(params, t)
+        end
+      end
+    end
+
+    surface_chart_config(
+      title: "3D-поверхность профилей атак для варианта #{assignment_index}",
+      x_labels: TIME_RANGE.map(&:to_s),
+      z_labels: z_labels,
+      values: values,
+      x_title: "t",
+      z_title: "v",
+      y_title: "P_A"
+    )
+  end
+
+  def self.attack_surface_config(attack)
+    p_ai_values = [0.1, 0.33, 0.66, 1.0]
+    values = p_ai_values.map do |p_ai|
+      TIME_RANGE.map { |t| (p_ai * attack.probability_at(t)).clamp(0.0, 1.0) }
+    end
+
+    surface_chart_config(
+      title: "3D-профиль атаки ##{attack.id}: p(ai)*pA(t)",
+      x_labels: TIME_RANGE.map(&:to_s),
+      z_labels: p_ai_values.map { |value| format("%.2f", value) },
+      values: values,
+      x_title: "t",
+      z_title: "p_i",
+      y_title: "P_F"
+    )
+  end
+
+  def self.collab_probability_surface_config(p_t:, title: nil)
+    values = (1..8).map do |n|
+      (1..5).map { |k| k <= n ? ProbabilityService.collab_test(p_t, k, n) : 0.0 }
+    end
+
+    surface_chart_config(
+      title: title || "3D-поверхность P(p(t,k)) при p(t)=#{format("%.2f", p_t)}",
+      x_labels: (1..5).map(&:to_s),
+      z_labels: (1..8).map(&:to_s),
+      values: values,
+      x_title: "k",
+      z_title: "n",
+      y_title: "P"
+    )
+  end
+
+  def self.experiment_surface_config(experiment:, results:)
+    rows = Array(results)
+    values = [
+      rows.map { |result| result.p_attack.to_f },
+      rows.map { |result| (experiment.p_ai.to_f * result.p_attack.to_f).clamp(0.0, 1.0) },
+      rows.map { |result| result.p_single.to_f },
+      rows.map { |result| result.p_single_counter.to_f },
+      rows.map { |result| result.p_collab.to_f },
+      rows.map { |result| result.p_collab_counter.to_f }
+    ]
+
+    surface_chart_config(
+      title: "3D-результаты эксперимента ##{experiment.id}",
+      x_labels: rows.map { |result| result.t.to_s },
+      z_labels: ["A", "F", "S", "S'", "C", "C'"],
+      values: values,
+      x_title: "t",
+      z_title: "q",
+      y_title: "P"
+    )
+  end
+
   private_class_method def self.probability_for(profile, t)
     case profile[:attack_type]
     when "linear"
@@ -193,5 +275,44 @@ class MethodologyReportService
 
   private_class_method def self.classification_meta(value)
     LEVELS.find { |level| value < level[:max] }
+  end
+
+  private_class_method def self.surface_chart_config(title:, x_labels:, z_labels:, values:, x_title:, z_title:, y_title:)
+    normalized_values = Array(values).map do |row|
+      Array(row).map { |value| value.nil? ? nil : value.to_f }
+    end
+    numeric_values = normalized_values.flatten.compact
+    y_min, y_max = adaptive_probability_range(numeric_values)
+
+    {
+      title: title,
+      xLabels: x_labels.map(&:to_s),
+      zLabels: z_labels.map(&:to_s),
+      xTitle: x_title,
+      zTitle: z_title,
+      yTitle: y_title,
+      yMin: y_min,
+      yMax: y_max,
+      values: normalized_values
+    }
+  end
+
+  private_class_method def self.adaptive_probability_range(values)
+    return [0.0, 1.0] if values.empty?
+
+    raw_min = values.min
+    raw_max = values.max
+    spread = raw_max - raw_min
+
+    min_value, max_value =
+      if spread.abs < 1e-9
+        padding = [raw_max.abs * 0.15, 0.001].max
+        [raw_min - padding, raw_max + padding]
+      else
+        padding = [spread * 0.12, raw_max.abs * 0.03, 0.001].max
+        [raw_min - padding, raw_max + padding]
+      end
+
+    [[min_value, 0.0].max, [max_value, 1.0].min]
   end
 end

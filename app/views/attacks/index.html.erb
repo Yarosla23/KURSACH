@@ -15,6 +15,15 @@
     </div>
   </div>
 
+  <div class="mb-10 bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+    <h2 class="text-2xl font-bold text-slate-900">3D-поверхность профилей атак для варианта <%= @assignment[:list_index] %></h2>
+    <p class="text-sm text-slate-500 mt-2 mb-4">
+      По оси X отложено время `t`, по глубине - вариант атаки (`L`/`E`), по высоте - вероятность `pA(t)`.
+      График построен по вариантам <%= @assignment[:attack_variants].join(", ") %> из методики.
+    </p>
+    <%= surface_chart_canvas @variant_attack_surface, height: "500px" %>
+  </div>
+
   <div id="attacks" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @attacks.each do |attack| %>
       <div class="group bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300 relative overflow-hidden">

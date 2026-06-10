@@ -59,6 +59,26 @@
     </div>
   </div>
 
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">3D-поверхность P(p(t,k)) при p(t)=<%= number_with_precision(@assignment[:detection_probabilities][:high], precision: 2) %></h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        Для варианта <%= @assignment[:list_index] %> это режим `p(t)>0.5`.
+        По оси X отложено `k`, по глубине - `n`, по высоте - вероятность коллаборационного обнаружения.
+      </p>
+      <%= surface_chart_canvas @detection_surface_high, height: "480px" %>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <h2 class="text-2xl font-bold text-slate-900">3D-поверхность P(p(t,k)) при p(t)=<%= number_with_precision(@assignment[:detection_probabilities][:low], precision: 2) %></h2>
+      <p class="text-sm text-slate-500 mt-2 mb-4">
+        Это режим `p(t)<0.5` для того же варианта.
+        График позволяет сопоставить форму поверхности с режимом более высокой вероятности однократного обнаружения.
+      </p>
+      <%= surface_chart_canvas @detection_surface_low, height: "480px" %>
+    </div>
+  </div>
+
   <div id="experiments" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @experiments.each do |experiment| %>
       <div class="group bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300 relative overflow-hidden">
@@ -104,4 +124,3 @@
     </div>
   <% end %>
 </div>
-

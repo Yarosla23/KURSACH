@@ -3,6 +3,8 @@ class AttacksController < ApplicationController
 
   def index
     @attacks = Attack.all.order(created_at: :desc)
+    @assignment = MethodologyReportService.general_list_assignment(1)
+    @variant_attack_surface = MethodologyReportService.variant_attack_surface_config(assignment_index: 1)
   end
 
   def show
@@ -19,6 +21,7 @@ class AttacksController < ApplicationController
       @assignment[:attack_variants],
       attack_type: :exponential
     )
+    @attack_surface = MethodologyReportService.attack_surface_config(@attack)
   end
 
   def new
